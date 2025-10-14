@@ -1,0 +1,31 @@
+name: cv-gml
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - scipy
+  - scikit-image
+  - scikit-learn
+  - matplotlib
+  - pillow
+  - imageio
+  - networkx
+  - pytest
+  - packaging
+  - python-dateutil
+  - threadpoolctl
+  - joblib
+  - cycler
+  - kiwisolver
+  - fonttools
+  - pyparsing
+  - pluggy
+  - iniconfig
+  - pygments
+  - six
+  - tifffile
+  - contourpy
+  - lazy_loader
+  - tk
+
