@@ -28,4 +28,6 @@ dependencies:
   - contourpy
   - lazy_loader
   - tk
+  - ipykernel
+  - ipywidgets
 
