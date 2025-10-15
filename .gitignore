@@ -1,5 +1,7 @@
 .DS_Store
 tests/
+images/
+*.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
