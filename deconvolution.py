@@ -6,6 +6,14 @@ from scipy.signal import convolve
 # from .._shared.utils import _supported_float_type
 # from . import uft
 
+def gaussian_kernel(size, sigma):
+    center = (size - 1) / 2.0
+    x = np.arange(size) - center
+    y = np.arange(size) - center
+    xv, yv = np.meshgrid(x, y)
+    kernel = np.exp(-(xv**2 + yv**2) / (2 * sigma**2))
+    kernel /= np.sum(kernel)
+    return kernel
 
 def wiener(image, psf, balance, reg=None, is_real=True, clip=True):
     r"""Wiener-Hunt deconvolution
