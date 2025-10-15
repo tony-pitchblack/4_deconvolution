@@ -2,6 +2,7 @@
 
 import numpy as np
 from scipy.signal import convolve
+from skimage.color import gray2rgb, rgb2gray
 
 # from .._shared.utils import _supported_float_type
 # from . import uft
@@ -14,6 +15,69 @@ def gaussian_kernel(size, sigma):
     kernel = np.exp(-(xv**2 + yv**2) / (2 * sigma**2))
     kernel /= np.sum(kernel)
     return kernel
+
+def discrete_fourier_transform(img, vis=True):
+    # RGB -> Gray
+    if img.ndim == 3:
+        if img.shape[-1] == 3:
+            img = rgb2gray(img)
+        else:
+            img = img.squeeze(-1)
+
+    # Применим преобразование Фурье из NumPy
+    fft = np.fft.fft2(img)
+
+    if vis:
+        # Отцентруем
+        fft_centered = np.fft.fftshift(fft)
+
+        # Применим логарифмическое преобразование для наглядности визуализации
+        fft_normalized = np.log1p(abs(fft_centered))
+
+        return fft_normalized
+    else:
+        return fft
+
+def pad_kernel(kernel, target):
+    th, tw = target
+    kh, kw = kernel.shape[:2]
+    ph, pw = th - kh, tw - kw
+
+    padding = [((ph + 1) // 2, ph // 2), ((pw + 1) // 2, pw // 2)]
+    kernel = np.pad(kernel, padding)
+
+    assert kernel.shape[:2] == target
+    return kernel
+
+def fourier_transform(kernel, size):
+    kernel_padded = pad_kernel(kernel, size)
+
+    # Приведите ядро к правильному формату
+    kernel_unshifted = np.fft.ifftshift(kernel_padded)
+
+    # Используя discrete_fourier_transform() с vis=False, примените преобразование Фурье к «раширенному» ядру
+    H = discrete_fourier_transform(kernel_unshifted, vis=False)
+    return H
+
+def inverse_kernel(H, threshold=1e-10, const=1e-8):
+    H_inv = np.where(np.abs(H) <= threshold, 0, 1 / (H + const))
+    return H_inv
+
+def inverse_filtering(img, kernel, threshold):
+    H = fourier_transform(kernel, img.shape[:2])
+    H_inv = inverse_kernel(H, threshold)
+    G = discrete_fourier_transform(img, vis=False)
+    F_tilde = G * H_inv
+    f_tilde = np.fft.ifft2(F_tilde).real
+    return f_tilde
+
+def compute_psnr(img1, img2, max_pixel=1.0):
+    mse = np.mean((img1 - img2) ** 2)
+    if mse == 0:
+        return float('inf')
+    psnr = 20 * np.log10(max_pixel) - 10 * np.log10(mse)
+    return psnr
+
 
 def wiener(image, psf, balance, reg=None, is_real=True, clip=True):
     r"""Wiener-Hunt deconvolution
