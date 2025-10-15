@@ -1,0 +1,62 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "00_gaussian",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "run.py",
+            "console": "integratedTerminal",
+            "args": ["unittest", "gaussian"]
+        },
+        {
+            "name": "01_fourier_transform",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "run.py",
+            "console": "integratedTerminal",
+            "args": ["unittest", "fourier_transform"]
+        },
+        {
+            "name": "02_inverse_kernel",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "run.py",
+            "console": "integratedTerminal",
+            "args": ["unittest", "inverse_kernel"]
+        },
+        {
+            "name": "03_inverse_filtering",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "run.py",
+            "console": "integratedTerminal",
+            "args": ["unittest", "inverse_filtering"]
+        },
+        {
+            "name": "04_wiener_filtering",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "run.py",
+            "console": "integratedTerminal",
+            "args": ["unittest", "wiener_filtering"]
+        },
+        {
+            "name": "05_psnr",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "run.py",
+            "console": "integratedTerminal",
+            "args": ["unittest", "psnr"]
+        },
+        {
+            "name": "06_filtering_constant",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "run.py",
+            "console": "integratedTerminal",
+            "args": ["unittest", "filtering_constant"]
+        }
+    ]
+}
+
