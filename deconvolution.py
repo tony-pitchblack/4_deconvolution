@@ -3,8 +3,8 @@
 import numpy as np
 from scipy.signal import convolve
 
-from .._shared.utils import _supported_float_type
-from . import uft
+# from .._shared.utils import _supported_float_type
+# from . import uft
 
 
 def wiener(image, psf, balance, reg=None, is_real=True, clip=True):
