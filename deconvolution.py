@@ -46,6 +46,11 @@ def discrete_fourier_transform(img, vis=True):
     else:
         return fft
 
+def compute_psnr(img_pred, img_gt):
+    # MAX_I = np.iinfo(img_gt.dtype).max if np.issubdtype(img_gt.dtype, np.integer) else 1.0
+    MAX_I = 255.0
+    return 20 * np.log10(MAX_I / np.mean((img_pred - img_gt) ** 2) ** 0.5)
+
 def pad_kernel(kernel, target):
     th, tw = target
     kh, kw = kernel.shape[:2]
@@ -74,13 +79,6 @@ def inverse_filtering(img, kernel, threshold):
     F_tilde = G * H_inv
     f_tilde = np.fft.ifft2(F_tilde).real
     return f_tilde
-
-def compute_psnr(img1, img2, max_pixel=1.0):
-    mse = np.mean((img1 - img2) ** 2)
-    if mse == 0:
-        return float('inf')
-    psnr = 20 * np.log10(max_pixel) - 10 * np.log10(mse)
-    return psnr
 
 def wiener(image, psf, balance, reg=None, is_real=True, clip=True):
     r"""Wiener-Hunt deconvolution
