@@ -7,6 +7,14 @@ from skimage.color import gray2rgb, rgb2gray
 # from .._shared.utils import _supported_float_type
 # from . import uft
 
+def wiener_filtering(blurred_img, kernel, K=0):
+    G = discrete_fourier_transform(blurred_img, vis=False)
+    H = fourier_transform(kernel, blurred_img.shape[:2])
+    H_conj = np.conj(H)
+    F_tilde = (H_conj / (np.abs(H) ** 2 + K)) * G
+    f_tilde = np.fft.ifft2(F_tilde).real
+    return f_tilde
+
 def gaussian_kernel(size, sigma):
     center = (size - 1) / 2.0
     x = np.arange(size) - center
@@ -50,12 +58,8 @@ def pad_kernel(kernel, target):
     return kernel
 
 def fourier_transform(kernel, size):
-    kernel_padded = pad_kernel(kernel, size)
-
-    # Приведите ядро к правильному формату
-    kernel_unshifted = np.fft.ifftshift(kernel_padded)
-
-    # Используя discrete_fourier_transform() с vis=False, примените преобразование Фурье к «раширенному» ядру
+    kernel_padded = pad_kernel(kernel, size) # pad kernel to img size
+    kernel_unshifted = np.fft.ifftshift(kernel_padded) # shift center to img center
     H = discrete_fourier_transform(kernel_unshifted, vis=False)
     return H
 
@@ -77,7 +81,6 @@ def compute_psnr(img1, img2, max_pixel=1.0):
         return float('inf')
     psnr = 20 * np.log10(max_pixel) - 10 * np.log10(mse)
     return psnr
-
 
 def wiener(image, psf, balance, reg=None, is_real=True, clip=True):
     r"""Wiener-Hunt deconvolution
