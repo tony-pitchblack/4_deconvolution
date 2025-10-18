@@ -7,7 +7,7 @@ from skimage.color import gray2rgb, rgb2gray
 # from .._shared.utils import _supported_float_type
 # from . import uft
 
-def wiener_filtering(blurred_img, kernel, K=0):
+def wiener_filtering(blurred_img, kernel, K=4.334986714892133e-05):
     G = discrete_fourier_transform(blurred_img, vis=False)
     H = fourier_transform(kernel, blurred_img.shape[:2])
     H_conj = np.conj(H)
